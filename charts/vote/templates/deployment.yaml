@@ -5,7 +5,7 @@ metadata:
   name: {{ include "voting-lab.fullname" . }}
 
   labels:
-    {{- include "vote-lab.labels" . | nindent 4 }}
+    {{- include "voting-lab.labels" . | nindent 4 }}
     app: {{ .Values.labels.app }}
     tier: {{ .Values.labels.tier }}
 
