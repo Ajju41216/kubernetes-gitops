@@ -1,0 +1,36 @@
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+
+metadata:
+  name: frontend-api
+  namespace: argocd
+
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/Ajju41216/vote.git
+    targetRevision: main
+    path: charts/frontend-api
+
+    helm:
+      releaseName: frontend-api
+
+      valueFiles:
+        - values.yaml
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: vote
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+
+    # syncOptions:
+    #   - CreateNamespace=true

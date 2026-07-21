@@ -1,0 +1,43 @@
+replicaCount: 2
+
+image:
+  repository: vote
+  tag: "v1"
+  pullPolicy: IfNotPresent
+
+labels:
+  app: 4tyre-test
+  tier: frontend
+  environment: lab
+  version: v1
+
+service:
+  type: NodePort
+  port: 80
+  targetPort: 80
+  nodePort: 30080
+
+persistence:
+  enabled: true
+  existingClaim: ""
+  storageClassName: manual
+  accessMode: ReadWriteOnce
+  size: 500Mi
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 64Mi
+
+  limits:
+    cpu: 250m
+    memory: 128Mi
+
+probes:
+  readiness:
+    initialDelaySeconds: 5
+    periodSeconds: 5
+
+  liveness:
+    initialDelaySeconds: 15
+    periodSeconds: 10
