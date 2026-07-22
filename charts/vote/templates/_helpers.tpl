@@ -1,3 +1,5 @@
+# this file keeps information about the funcations. 
+
 {{- define "voting-lab.name" -}}
 voting-test
 {{- end }}
