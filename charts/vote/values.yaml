@@ -8,16 +8,15 @@ image:
   pullPolicy: IfNotPresent
 
 labels:
-  app: vote-api
+  app: vote
   tier: frontend
   environment: lab
-  version: v1
+  version: "01"
 
 service:
-  type: NodePort
+  type: ClusterIP
   port: 80
   targetPort: 80
-  nodePort: 30080
 
 resources:
   requests:
