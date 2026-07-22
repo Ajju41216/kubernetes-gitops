@@ -3,12 +3,12 @@
 replicaCount: 3
 
 image:
-  repository: vote
+  repository: worker
   tag: "01"
   pullPolicy: IfNotPresent
 
 labels:
-  app: vote-api
+  app: worker-api
   tier: frontend
   environment: lab
   version: v1
@@ -18,6 +18,13 @@ service:
   port: 80
   targetPort: 80
   nodePort: 30080
+
+persistence:
+  enabled: true
+  existingClaim: ""
+  storageClassName: manual
+  accessMode: ReadWriteOnce
+  size: 500Mi
 
 resources:
   requests:
