@@ -3,7 +3,6 @@ kind: Deployment
 
 metadata:
   name: {{ include "voting-lab.fullname" . }}
-
   labels:
     {{- include "voting-lab.labels" . | nindent 4 }}
     app: {{ .Values.labels.app }}
@@ -11,6 +10,7 @@ metadata:
 
 spec:
   replicas: {{ .Values.replicaCount }}
+
   revisionHistoryLimit: 5
 
   strategy:
@@ -34,13 +34,20 @@ spec:
 
     spec:
       containers:
-        - name: nginx-container
+        - name: vote
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
 
           ports:
             - name: http
               containerPort: {{ .Values.service.targetPort }}
+
+          env:
+            - name: REDIS_HOST
+              value: "{{ .Values.config.redisHost }}"
+
+            - name: REDIS_PORT
+              value: "{{ .Values.config.redisPort }}"
 
           resources:
             {{- toYaml .Values.resources | nindent 12 }}

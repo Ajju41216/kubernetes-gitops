@@ -1,0 +1,14 @@
+replicaCount: 2
+
+image:
+  repository: result
+  tag: "01"
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 80
+
+config:
+  dbHost: db
+  dbPort: "5432"

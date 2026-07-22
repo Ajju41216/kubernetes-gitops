@@ -1,45 +1,21 @@
-# this is the file where we store values. 
-
-replicaCount: 3
+replicaCount: 2
 
 image:
   repository: worker
   tag: "01"
-  pullPolicy: IfNotPresent
 
-labels:
-  app: worker-api
-  tier: frontend
-  environment: lab
-  version: v1
+config:
+  redisHost: redis
+  redisPort: "6379"
 
-service:
-  type: NodePort
-  port: 80
-  targetPort: 80
-  nodePort: 30080
-
-persistence:
-  enabled: true
-  existingClaim: ""
-  storageClassName: manual
-  accessMode: ReadWriteOnce
-  size: 500Mi
+  dbHost: db
+  dbPort: "5432"
 
 resources:
   requests:
     cpu: 100m
-    memory: 64Mi
-
-  limits:
-    cpu: 250m
     memory: 128Mi
 
-probes:
-  readiness:
-    initialDelaySeconds: 5
-    periodSeconds: 5
-
-  liveness:
-    initialDelaySeconds: 15
-    periodSeconds: 10
+  limits:
+    cpu: 500m
+    memory: 256Mi

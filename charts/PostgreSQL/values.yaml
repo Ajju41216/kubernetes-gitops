@@ -1,0 +1,22 @@
+replicaCount: 1
+
+image:
+  repository: postgres
+  tag: "16"
+
+service:
+  type: ClusterIP
+  port: 5432
+  targetPort: 5432
+
+database:
+
+  name: voting
+
+  user: postgres
+
+  password: postgres
+
+persistence:
+  enabled: true
+  size: 2Gi

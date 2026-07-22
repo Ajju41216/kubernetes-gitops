@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: {{ include "voting-lab.fullname" . }}
+  labels:
+    {{- include "voting-lab.labels" . | nindent 4 }}
+    app: {{ .Values.labels.app }}
+    tier: {{ .Values.labels.tier }}
+
+spec:
+  type: {{ .Values.service.type }}
+
+  selector:
+    app: {{ .Values.labels.app }}
+    tier: {{ .Values.labels.tier }}
+
+  ports:
+    - name: http
+      protocol: TCP
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
