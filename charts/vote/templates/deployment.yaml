@@ -42,40 +42,6 @@ spec:
             - name: http
               containerPort: {{ .Values.service.targetPort }}
 
-          env:
-            - name: POD_NAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.name
-
-            - name: POD_NAMESPACE
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.namespace
-
-          command:
-            - /bin/sh
-            - -c
-
-          args:
-            - |
-              mkdir -p /usr/share/nginx/html
-
-              cat <<EOF > /usr/share/nginx/html/index.html
-              <html>
-                <body>
-                  <h1>Helm Kubernetes Voting Lab</h1>
-                  <p>Pod: ${POD_NAME}</p>
-                  <p>Namespace: ${POD_NAMESPACE}</p>
-                  <p>Managed by: Helm</p>
-                  <p>Chart version: {{ .Chart.Version }}</p>
-                  <p>Application version: {{ .Chart.AppVersion }}</p>
-                </body>
-              </html>
-              EOF
-
-              nginx -g "daemon off;"
-
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
 
