@@ -7,7 +7,7 @@ redis
 {{- end }}
 
 {{- define "redis.fullname" -}}
-{{ .Release.Name }}-redis
+redis
 {{- end }}
 
 {{- define "redis.labels" -}}

@@ -1,15 +1,26 @@
-replicaCount: 2
+replicaCount: 1
 
 image:
   repository: worker
   tag: "01"
+  pullPolicy: IfNotPresent
 
-config:
-  redisHost: redis
-  redisPort: "6379"
+labels:
+  app: worker
+  tier: backend
+  environment: lab
+  version: v1
 
-  dbHost: db
-  dbPort: "5432"
+redis:
+  host: redis-redis
+  port: 6379
+
+database:
+  host: postgres
+  port: 5432
+  name: votes
+  user: postgres
+  password: postgres
 
 resources:
   requests:
@@ -17,5 +28,5 @@ resources:
     memory: 128Mi
 
   limits:
-    cpu: 500m
+    cpu: 250m
     memory: 256Mi

@@ -1,16 +1,42 @@
 # this file keeps information about the funcations. 
 
-{{- define "voting-lab.name" -}}
-voting-test
+
+# The Worker connects out to Redis and PostgreSQL.
+
+
+{{/*
+Return the chart name.
+*/}}
+{{- define "worker.name" -}}
+{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
-{{- define "voting-lab.fullname" -}}
-{{ .Release.Name }}-voting-test
+{{/*
+Return the complete workload name.
+*/}}
+{{- define "worker.fullname" -}}
+{{- if .Values.fullnameOverride }}
+{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
+{{- else }}
+{{- printf "%s-%s" .Release.Name (include "worker.name" .) | trunc 63 | trimSuffix "-" }}
+{{- end }}
 {{- end }}
 
-{{- define "voting-lab.labels" -}}
-app.kubernetes.io/name: {{ include "voting-lab.name" . }}
+{{/*
+Common Kubernetes labels.
+*/}}
+{{- define "worker.labels" -}}
+helm.sh/chart: {{ printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" }}
+app.kubernetes.io/name: {{ include "worker.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
-helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+{{- end }}
+
+{{/*
+Labels used by the Deployment selector.
+*/}}
+{{- define "worker.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "worker.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}

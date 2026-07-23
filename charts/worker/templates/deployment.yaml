@@ -2,31 +2,33 @@ apiVersion: apps/v1
 kind: Deployment
 
 metadata:
-  name: {{ include "voting-lab.fullname" . }}
+  name: {{ include "worker.fullname" . }}
 
   labels:
-    {{- include "voting-lab.labels" . | nindent 4 }}
+    {{- include "worker.labels" . | nindent 4 }}
     app: {{ .Values.labels.app }}
     tier: {{ .Values.labels.tier }}
 
 spec:
   replicas: {{ .Values.replicaCount }}
+
   revisionHistoryLimit: 5
 
   strategy:
     type: RollingUpdate
+
     rollingUpdate:
-      maxUnavailable: 1
+      maxUnavailable: 0
       maxSurge: 1
 
   selector:
     matchLabels:
-      app: {{ .Values.labels.app }}
-      tier: {{ .Values.labels.tier }}
+      {{- include "worker.selectorLabels" . | nindent 6 }}
 
   template:
     metadata:
       labels:
+        {{- include "worker.selectorLabels" . | nindent 8 }}
         app: {{ .Values.labels.app }}
         tier: {{ .Values.labels.tier }}
         environment: {{ .Values.labels.environment }}
@@ -34,27 +36,11 @@ spec:
 
     spec:
       containers:
-        - name: nginx-container
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+        - name: worker
 
-          ports:
-            - name: http
-              containerPort: {{ .Values.service.targetPort }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
 
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-
-          readinessProbe:
-            httpGet:
-              path: /
-              port: {{ .Values.service.targetPort }}
-            initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
-            periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
-
-          livenessProbe:
-            httpGet:
-              path: /
-              port: {{ .Values.service.targetPort }}
-            initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds }}
-            periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
